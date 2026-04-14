@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamLine Spotlight Roadmap</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D1B2A;--navy-90:rgba(13,27,42,.9);--navy-60:rgba(13,27,42,.6);
+  --navy-45:rgba(13,27,42,.45);--navy-30:rgba(13,27,42,.3);--navy-15:rgba(13,27,42,.15);
+  --navy-08:rgba(13,27,42,.08);--navy-04:rgba(13,27,42,.04);
+  --blue:#2563EB;--blue-light:rgba(37,99,235,.08);--blue-mid:rgba(37,99,235,.15);
+  --white:#FFFFFF;
+  --qw:#16A34A;--mp:#2563EB;--fi:#F59E0B;--ts:#DC2626;--p1:#7C3AED;
+  --bg:#F1F5F9;
+  --card-shadow:0 1px 6px rgba(13,27,42,.08);
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--navy);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ── */
+.header{background:var(--navy);color:var(--white);padding:2.25rem 2.5rem 1.75rem;position:relative;overflow:hidden}
+.header::after{content:"";position:absolute;top:0;right:0;width:45%;height:100%;background:linear-gradient(135deg,transparent 30%,rgba(37,99,235,.1));pointer-events:none}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+.header h1{font-size:1.4rem;font-weight:700;letter-spacing:-.025em;margin:0}
+.header-meta{display:flex;gap:1.25rem;margin-top:.5rem;font-size:.82rem;opacity:.75;flex-wrap:wrap}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:.6rem .85rem;font-size:.68rem;flex-shrink:0}
+.legend-title{grid-column:1/-1;font-size:.56rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.5;margin-bottom:1px}
+.legend-item{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── TIMELINE ── */
+.timeline-strip{background:var(--white);border-bottom:1px solid var(--navy-08);padding:1rem 2.5rem .85rem;overflow-x:auto}
+.timeline{display:flex;align-items:center;min-width:560px}
+.tl-phase{display:flex;flex-direction:column;position:relative}
+.tl-phase:first-child{align-items:flex-start}
+.tl-phase:last-child{align-items:flex-end}
+.tl-phase:not(:first-child):not(:last-child){align-items:center}
+.tl-bar{height:4px;width:100%;border-radius:2px}
+.tl-bar--now{background:linear-gradient(90deg,var(--qw),#22c55e)}
+.tl-bar--next{background:linear-gradient(90deg,var(--mp),#3b82f6)}
+.tl-bar--later{background:linear-gradient(90deg,var(--navy-30),var(--navy-15))}
+.tl-label{font-size:.68rem;font-weight:600;margin-top:.4rem}
+.tl-sub{font-size:.6rem;color:var(--navy-45);margin-top:.05rem}
+.tl-gate{display:flex;flex-direction:column;align-items:center;flex:0 0 auto;padding:0 .6rem;z-index:1}
+.tl-gate-diamond{width:16px;height:16px;background:var(--blue);border:2px solid var(--white);border-radius:3px;transform:rotate(45deg);box-shadow:0 0 0 3px var(--blue-light)}
+.tl-gate-label{font-size:.56rem;font-weight:700;color:var(--blue);text-align:center;margin-top:.4rem;max-width:80px;line-height:1.3}
+.tl-connector{flex:0 0 2px;height:4px;background:var(--navy-15)}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:.4rem;padding:.65rem 2.5rem;background:var(--white);border-bottom:1px solid var(--navy-08);flex-wrap:wrap;align-items:center}
+.filters label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-45);margin-right:.15rem}
+.filter-btn{border:1px solid var(--navy-15);background:var(--white);color:var(--navy);font-size:.76rem;padding:.25rem .65rem;border-radius:999px;cursor:pointer;transition:.15s}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue)}
+.filter-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.filter-btn.active{background:var(--navy);color:var(--white);border-color:var(--navy)}
+
+/* ── LANES ── */
+.roadmap{display:grid;grid-template-columns:1.8fr 1.2fr 1fr;gap:1rem;padding:1rem 2.5rem 1.25rem;align-items:start}
+@media(max-width:1000px){.roadmap{grid-template-columns:1fr}}
+.lane{background:var(--white);border-radius:var(--radius);border:1px solid var(--navy-08);overflow:hidden}
+.lane--now{border-top:3px solid var(--qw)}
+.lane--next{border-top:3px solid var(--mp)}
+.lane--later{border-top:3px solid var(--navy-30)}
+.lane-header{padding:.85rem 1rem .4rem}
+.lane-title-row{display:flex;justify-content:space-between;align-items:baseline}
+.lane-title{font-weight:700;font-size:.9rem}
+.lane-count{font-size:.65rem;color:var(--navy-45);background:var(--navy-04);padding:.1rem .45rem;border-radius:999px}
+.lane-stats{display:flex;gap:.65rem;margin-top:.3rem;font-size:.62rem;color:var(--navy-45);padding-bottom:.5rem;border-bottom:1px solid var(--navy-08)}
+.lane-stats strong{color:var(--navy)}
+.lane-cards{padding:.5rem .65rem .7rem;display:flex;flex-direction:column;gap:.5rem}
+.lane-empty{padding:1.25rem .75rem;text-align:center;font-size:.75rem;color:var(--navy-30);font-style:italic}
+
+/* ── CAPACITY BAR ── */
+.capacity-bar{background:var(--navy-04);border:1px solid var(--navy-08);border-radius:var(--radius-sm);padding:.6rem .75rem;margin-bottom:.35rem}
+.capacity-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-45);margin-bottom:.5rem}
+.cap-row{display:flex;gap:1rem}
+.cap-item{flex:1}
+.cap-label{display:flex;justify-content:space-between;font-size:.6rem;color:var(--navy-45);margin-bottom:.2rem}
+.cap-label strong{font-weight:600}
+.cap-track{height:6px;border-radius:3px;background:var(--navy-08)}
+.cap-fill{height:6px;border-radius:3px;transition:width .3s}
+.cap-green{background:var(--qw)}
+.cap-amber{background:var(--fi)}
+.cap-red{background:var(--ts)}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--navy-08);border-radius:var(--radius-sm);padding:.75rem .85rem;box-shadow:var(--card-shadow);cursor:pointer;transition:box-shadow .15s,transform .15s;position:relative}
+.card:hover{box-shadow:0 4px 14px rgba(13,27,42,.13);transform:translateY(-1px)}
+.card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.card--keystone{border-left:3px solid var(--blue);background:linear-gradient(135deg,var(--white) 85%,rgba(37,99,235,.03))}
+.card--keystone .card-name{font-size:.86rem}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.35rem;margin-bottom:.3rem}
+.card-name{font-weight:600;font-size:.82rem;line-height:1.35;display:flex;align-items:center;flex-wrap:wrap;gap:.3rem}
+.card-id{font-size:.6rem;font-weight:700;color:var(--navy-30)}
+.badge-row{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.badge{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.12rem .45rem;border-radius:999px;white-space:nowrap}
+.badge--quick-win{background:rgba(22,163,74,.08);color:var(--qw)}
+.badge--major{background:var(--blue-light);color:var(--mp)}
+.badge--fill-in{background:rgba(245,158,11,.08);color:var(--fi)}
+.badge--time-sinker{background:rgba(220,38,38,.08);color:var(--ts)}
+.priority-badge{font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.12rem .4rem;border-radius:4px;white-space:nowrap}
+.priority-badge--p0{background:var(--navy-08);color:var(--navy)}
+.priority-badge--p1{background:rgba(124,58,237,.08);color:var(--p1)}
+.override-tag{font-size:.56rem;font-weight:600;color:var(--blue);background:var(--blue-light);padding:.1rem .35rem;border-radius:4px}
+.keystone-tag{font-size:.56rem;font-weight:700;color:var(--white);background:var(--blue);padding:.1rem .4rem;border-radius:4px}
+.card-scores{display:flex;gap:.55rem;font-size:.64rem;color:var(--navy-45);margin-bottom:.25rem;align-items:center;flex-wrap:wrap}
+.card-scores span{display:flex;align-items:center;gap:.2rem}
+.score-bar{display:flex;gap:2px}
+.score-pip{width:5px;height:5px;border-radius:1.5px;background:var(--navy-15)}
+.score-pip.filled{background:var(--navy)}
+.card--keystone .score-pip.filled{background:var(--blue)}
+.est-divider{border-left:1px solid var(--navy-15);padding-left:.5rem}
+
+/* Dependencies */
+.card-deps{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:.25rem}
+.dep-chip{font-size:.56rem;font-weight:600;color:var(--navy-60);background:var(--navy-04);border:1px solid var(--navy-08);padding:1px 6px;border-radius:4px;display:inline-flex;align-items:center;gap:2px}
+.dep-chip svg{width:7px;height:7px;fill:var(--navy-30)}
+
+.card-rationale{font-size:.72rem;color:var(--navy-60);line-height:1.55;display:none;padding-top:.35rem;border-top:1px solid var(--navy-08);margin-top:.35rem}
+.card.open .card-rationale{display:block}
+.sprint-note{margin-top:.5rem;font-size:.68rem;color:var(--navy-45);background:var(--navy-04);border-radius:4px;padding:.4rem .6rem;line-height:1.4;border-left:2px solid var(--navy-15);display:none}
+.card.open .sprint-note{display:block}
+.sprint-note strong{color:var(--navy-60)}
+
+.card-expand{position:absolute;top:.7rem;right:.7rem;width:18px;height:18px;border-radius:50%;background:var(--navy-04);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.card.open .card-expand{transform:rotate(180deg)}
+.card-expand svg{width:10px;height:10px;stroke:var(--navy-30);fill:none}
+
+/* ── DECISION GATE CARD ── */
+.gate-card{background:linear-gradient(135deg,rgba(37,99,235,.04),rgba(37,99,235,.08));border:1px dashed var(--blue-mid);border-radius:var(--radius-sm);padding:.7rem .85rem;margin-bottom:.15rem}
+.gate-card h4{font-size:.68rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem}
+.gate-card h4 svg{width:11px;height:11px;fill:var(--blue)}
+.gate-card p{font-size:.64rem;color:var(--navy-60);line-height:1.45;margin:0}
+.gate-metric{display:inline-block;font-weight:600;color:var(--navy);background:var(--white);padding:.05rem .35rem;border-radius:3px;font-size:.6rem;margin:.1rem .05rem}
+
+/* ── CUT LIST ── */
+.cut-section{padding:0 2.5rem 1.75rem}
+.cut-header{font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:.45rem;display:flex;align-items:center;gap:.35rem}
+.cut-header svg{width:14px;height:14px;fill:var(--ts)}
+.cut-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+@media(max-width:1000px){.cut-grid{grid-template-columns:1fr}}
+.cut-card{background:var(--white);border:1px solid rgba(220,38,38,.12);border-radius:var(--radius-sm);padding:.65rem .8rem;position:relative;opacity:.6;cursor:pointer;transition:.15s}
+.cut-card:hover{opacity:.9}
+.cut-card .card-rationale{display:none;border-top-color:rgba(220,38,38,.1)}
+.cut-card.open .card-rationale{display:block}
+.cut-card .card-top{margin-bottom:.2rem}
+.cut-line{position:absolute;left:.8rem;right:.8rem;top:calc(50% - 1px);height:1px;background:var(--ts);opacity:.2;pointer-events:none}
+.cut-card.open .cut-line{display:none}
+
+.footer{text-align:center;padding:1rem;font-size:.65rem;color:var(--navy-30)}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .filters,.timeline-strip{display:none}
+  .header{padding:1rem 1.25rem .75rem}
+  .header h1{font-size:1.2rem}
+  .roadmap{grid-template-columns:1fr 1fr 1fr;gap:.6rem;padding:.75rem 1.25rem}
+  .lane{break-inside:avoid;page-break-inside:avoid}
+  .card,.cut-card{box-shadow:none;break-inside:avoid}
+  .card .card-rationale,.cut-card .card-rationale,.card .sprint-note{display:block}
+  .card-expand{display:none}
+  .cut-line{display:none}
+  .cut-section{padding:0 1.25rem 1rem}
+  .footer{padding:.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div>
+      <h1>StreamLine Spotlight Roadmap</h1>
+      <div class="header-meta">
+        <span>Q2 2026</span>
+        <span>2 Engineers + 1 Designer</span>
+        <span>3-Week Sprints</span>
+        <span>Persona: Overwhelmed Wanderer</span>
+      </div>
+    </div>
+    <div class="legend" aria-label="Quadrant legend">
+      <span class="legend-title">Effort vs. Value</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--qw)"></span>Quick Win</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--mp)"></span>Major Project</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--fi)"></span>Fill-In</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--ts)"></span>Time Sinker</span>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-strip" aria-label="Sprint timeline">
+  <div class="timeline">
+    <div class="tl-phase" style="flex:2">
+      <div class="tl-bar tl-bar--now"></div>
+      <span class="tl-label">Sprint 1</span>
+      <span class="tl-sub">Weeks 1 – 3 · MVP Surface</span>
+    </div>
+    <div class="tl-gate">
+      <div class="tl-gate-diamond"></div>
+      <span class="tl-gate-label">6-Wk A/B Decision Gate</span>
+    </div>
+    <div class="tl-phase" style="flex:1.5">
+      <div class="tl-bar tl-bar--next"></div>
+      <span class="tl-label">Sprints 2 – 4</span>
+      <span class="tl-sub">Personalization + Re-engagement</span>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-phase" style="flex:1.2">
+      <div class="tl-bar tl-bar--later"></div>
+      <span class="tl-label">Phase 2+</span>
+      <span class="tl-sub">Discoverer Persona</span>
+    </div>
+  </div>
+</div>
+
+<div class="filters">
+  <label>Filter:</label>
+  <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+  <button class="filter-btn" data-filter="quick-win" aria-pressed="false">Quick Wins</button>
+  <button class="filter-btn" data-filter="major" aria-pressed="false">Major Projects</button>
+  <button class="filter-btn" data-filter="fill-in" aria-pressed="false">Fill-Ins</button>
+  <button class="filter-btn" data-filter="time-sinker" aria-pressed="false">Time Sinkers</button>
+</div>
+
+<div class="roadmap">
+  <div class="lane lane--now" id="lane-now">
+    <div class="lane-header">
+      <div class="lane-title-row"><span class="lane-title">NOW — Sprint 1</span><span class="lane-count" id="count-now"></span></div>
+      <div class="lane-stats" id="stats-now"></div>
+    </div>
+    <div class="lane-cards" id="cards-now"></div>
+  </div>
+  <div class="lane lane--next" id="lane-next">
+    <div class="lane-header">
+      <div class="lane-title-row"><span class="lane-title">NEXT — Sprints 2–4</span><span class="lane-count" id="count-next"></span></div>
+      <div class="lane-stats" id="stats-next"></div>
+    </div>
+    <div class="lane-cards" id="cards-next"></div>
+  </div>
+  <div class="lane lane--later" id="lane-later">
+    <div class="lane-header">
+      <div class="lane-title-row"><span class="lane-title">LATER — Backlog</span><span class="lane-count" id="count-later"></span></div>
+      <div class="lane-stats" id="stats-later"></div>
+    </div>
+    <div class="lane-cards" id="cards-later"></div>
+  </div>
+</div>
+
+<div class="cut-section" id="cut-section">
+  <div class="cut-header"><svg viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8z"/></svg>Cut List — Removed from Scope</div>
+  <div class="cut-grid" id="cut-grid"></div>
+</div>
+
+<div class="footer">StreamLine Spotlight · Discovery & Curation · Updated April 2026</div>
+
+<script>
+const features = [
+  { id:"A1", name:"Spotlight Curated Rail", value:5, effort:3, quadrant:"major", lane:"now", keystone:true, engDays:"10\u201312", desDays:"5", deps:[], rationale:"This is the initiative itself. Replaces the undifferentiated 15,000-title wall with a short, per-user selection ranked by predicted completion probability. Powered by the full 16-signal ML taxonomy (Tier 1: completion-weighted history, collaborative filtering, abandonment signals, genre/creator preference, sequential patterns, content knowledge graph). The 22-point churn reduction observed in early Spotlight cohorts validates this exact intervention. Without this feature, there is no Spotlight.", sprintNote:"Critical path \u2014 A2 and A4 are blocked until card infrastructure lands. Per-user ML pipeline is the dominant engineering risk." },
+  { id:"A11", name:"Continue Watching Fix", value:4, effort:1, quadrant:"quick-win", lane:"now", engDays:"2", desDays:"1", deps:[], override:"NEW", rationale:"BUG-109 cited in 4 interviews. Purges completed titles from Continue Watching, surfaces it above promotional content. The fastest path to a 30+ minute session is often finishing something already started. Lowest-effort, highest-certainty intervention available.", sprintNote:"Independent of A1 \u2014 can start day 1 in parallel." },
+  { id:"A2", name:"\u201cWhy You\u2019ll Love This\u201d Label", value:4, effort:2, quadrant:"quick-win", lane:"now", engDays:"4\u20135", desDays:"2", deps:["A1"], rationale:"The Wanderer\u2019s core complaint is zero decision-support. A single sentence of contextual reasoning is the cheapest possible trust signal that converts passive tiles into active recommendations. UXR subjects explicitly asked for this.", sprintNote:"Should ship \u2014 but first to slip if A1\u2019s ML endpoint integration runs long." },
+  { id:"A4", name:"Mood-Based Entry Point", value:4, effort:2, quadrant:"quick-win", lane:"now", engDays:"3", desDays:"2", deps:["A1"], rationale:"Maps directly to session-intent signal (Tier 2, #7 in ML Signal Taxonomy). Compresses the decision space from \u201ceverything StreamLine has\u201d to \u201cthe 5 best things for how I feel right now.\u201d That narrowing is the behavioural mechanism that breaks the browse-and-bail loop.", sprintNote:"Starts after A1 card rail ships. Lightweight filter on existing metadata." },
+  { id:"A5", name:"Multi-Profile Modeling", value:4, effort:3, quadrant:"major", lane:"next", deps:["A1"], rationale:"Per-user ML in A1 ranks against the active profile\u2019s history but doesn\u2019t actively distinguish viewing patterns within that profile across household members. A5 adds household profile separation \u2014 detection of who\u2019s actually at the screen on a shared profile via time-of-day, device, and session-start signals (profile selection, Tier 3 signal). Prevents the rail from showing kids\u2019 content to adults at 10pm and vice versa. Builds on A1\u2019s ML pipeline rather than replacing it.", openDefault:true },
+  { id:"A6", name:"Spotlight Digest Email", value:4, effort:2, quadrant:"quick-win", lane:"next", deps:["A1"], override:"Moved from Sprint 1", rationale:"M3 retention cliff data shows Month 0\u2192Month 1 is the largest leak. At 1.1 sessions/week, the Wanderer barely touches the product. A targeted email at days 3, 7, and 14 addresses the retention cliff directly. Now drives users toward a validated Spotlight surface.", sprintNote:"Moved to NEXT: email infra needs dedicated engineering attention, and the email is a force multiplier that works best aimed at a validated in-app experience." },
+  { id:"A3", name:"Hidden Gem Badge", value:2, effort:1, quadrant:"fill-in", lane:"later", deps:[], rationale:"Serves the Discoverer persona more than the Wanderer. The badge doesn\u2019t provide a reason to press play; it provides a reason to feel intellectually curious \u2014 a Discoverer motivation. At Effort 1, essentially free to ship if time permits." },
+  { id:"A7", name:"Curator Profiles", value:2, effort:3, quadrant:"fill-in", lane:"later", deps:["A1"], override:"Time Sinker\u2192Fill-In", rationale:"The Wanderer doesn\u2019t care who picked the film. A simple byline suffices. However, strong M2 Discoverer demand (Julian, Jordan, Marcus). Becomes a Quick Win in Phase 2 when Discoverer persona becomes the target." },
+  { id:"A9", name:"Advanced Filter Engine", value:1, effort:4, quadrant:"time-sinker", lane:"later", deps:[], override:"Kill\u2192Later", rationale:"The anti-Wanderer feature. Adding decade/language/runtime controls gives her more decisions to make, deepening the exact decision fatigue the initiative exists to eliminate. Real M2 Discoverer demand; evaluate in Phase 2." },
+  { id:"A8", name:"Watch Party (Spotlight Only)", value:1, effort:4, quadrant:"time-sinker", lane:"cut", deps:[], rationale:"The Wanderer\u2019s friction is finding something to watch, not watching it with others. Requires real-time WebSocket infrastructure the team can\u2019t build in three weeks. Originated from Sales, not from any user who described the browse-and-bail loop." },
+  { id:"A10", name:"Offline Download (Spotlight)", value:1, effort:3, quadrant:"time-sinker", lane:"cut", deps:[], rationale:"Downloading presupposes the user already found something worth watching \u2014 the step the product is currently failing at. Zero relationship to the browse-and-bail loop. Originated from Sales competitive analysis." },
+];
+
+const qLabels={"quick-win":"Quick Win","major":"Major Project","fill-in":"Fill-In","time-sinker":"Time Sinker"};
+/* Priority labels removed — using Value/Effort scores instead */
+
+function pips(n,max,isK){
+  let h='<span class="score-bar">';
+  for(let i=0;i<max;i++) h+='<span class="score-pip'+(i<n?' filled':'')+'"></span>';
+  return h+'</span>';
+}
+
+function depHTML(deps){
+  if(!deps||!deps.length) return '';
+  return '<div class="card-deps">'+deps.map(d=>'<span class="dep-chip"><svg viewBox="0 0 16 16"><path d="M6.354 5.5H2a.5.5 0 000 1h4.354l-2.2 2.2a.5.5 0 00.708.708l3-3a.5.5 0 000-.708l-3-3a.5.5 0 10-.708.708L6.354 5.5z"/></svg>Requires '+d+'</span>').join('')+'</div>';
+}
+
+function capBar(items){
+  const engMax=22,desMax=11;
+  let engUsed=0,desUsed=0;
+  items.forEach(f=>{
+    if(f.engDays){const p=f.engDays.split('\u2013');engUsed+=p.length===2?(parseInt(p[0])+parseInt(p[1]))/2:parseInt(p[0]);}
+    if(f.desDays) desUsed+=parseInt(f.desDays);
+  });
+  const engPct=Math.round(engUsed/engMax*100), desPct=Math.round(desUsed/desMax*100);
+  const cls=p=>p>90?'cap-red':p>75?'cap-amber':'cap-green';
+  const clr=p=>p>90?'var(--ts)':p>75?'var(--fi)':'var(--navy)';
+  return '<div class="capacity-bar"><div class="capacity-title">Sprint 1 Capacity (at 75% utilization)</div><div class="cap-row">' +
+    '<div class="cap-item"><div class="cap-label"><span>Engineering</span><strong style="color:'+clr(engPct)+'">~'+engUsed+'/'+engMax+' days ('+engPct+'%)</strong></div><div class="cap-track"><div class="cap-fill '+cls(engPct)+'" style="width:'+engPct+'%"></div></div></div>' +
+    '<div class="cap-item"><div class="cap-label"><span>Design</span><strong style="color:'+clr(desPct)+'">~'+desUsed+'/'+desMax+' days ('+desPct+'%)</strong></div><div class="cap-track"><div class="cap-fill '+cls(desPct)+'" style="width:'+desPct+'%"></div></div></div>' +
+    '</div></div>';
+}
+
+function buildCard(f,cut){
+  const el=document.createElement("div");
+  const cls=[cut?"cut-card":"card"];
+  if(f.keystone)cls.push("card--keystone");
+  if(f.openDefault&&!cut)cls.push("open");
+  el.className=cls.join(" ");
+  el.setAttribute("data-quadrant",f.quadrant);
+  el.setAttribute("tabindex","0");
+  el.setAttribute("role","button");
+  el.setAttribute("aria-expanded",f.openDefault?"true":"false");
+
+  const tags=[];
+  if(f.keystone)tags.push('<span class="keystone-tag">Keystone</span>');
+  if(f.override)tags.push('<span class="override-tag">'+f.override+'</span>');
+
+  const estHTML=(f.engDays?'<span class="est-divider">~'+f.engDays+'d eng</span>':'')+(f.desDays?'<span>~'+f.desDays+'d design</span>':'');
+
+  el.innerHTML=
+    (cut?'<div class="cut-line"></div>':'')+
+    '<div class="card-top"><span class="card-name"><span class="card-id">'+f.id+'</span> '+f.name+' '+tags.join(' ')+'</span>'+
+    '<div class="badge-row"><span class="badge badge--'+f.quadrant+'">'+qLabels[f.quadrant]+'</span></div></div>'+
+    '<div class="card-scores"><span>Value '+pips(f.value,5,f.keystone)+' '+f.value+'/5</span><span>Effort '+pips(f.effort,5,f.keystone)+' '+f.effort+'/5</span>'+estHTML+'</div>'+
+    depHTML(f.deps)+
+    '<div class="card-rationale">'+f.rationale+'</div>'+
+    (f.sprintNote?'<div class="sprint-note"><strong>Sprint note:</strong> '+f.sprintNote+'</div>':'')+
+    '<div class="card-expand"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+
+  function toggle(){el.classList.toggle("open");el.setAttribute("aria-expanded",el.classList.contains("open"));}
+  el.addEventListener("click",toggle);
+  el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+  return el;
+}
+
+function gateCard(){
+  const el=document.createElement("div");
+  el.className="gate-card";
+  el.innerHTML='<h4><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm1 10H7V7h2v4zm0-5H7V4h2v2z"/></svg>6-Week A/B Decision Gate</h4>'+
+    '<p>Ship if Spotlight origination \u2265 15% at significance and guardrail \u2265 27%. Iterate if 3\u201315%. Kill if no lift or guardrail breached.</p>'+
+    '<p style="margin-top:.2rem"><span class="gate-metric">Spotlight origination \u2265 15%</span> <span class="gate-metric">Browse-to-play \u2265 27%</span></p>';
+  return el;
+}
+
+function render(filter){
+  ["now","next","later"].forEach(lane=>{
+    const c=document.getElementById("cards-"+lane);
+    c.innerHTML="";
+    const allInLane=features.filter(f=>f.lane===lane);
+    if(lane==="now")c.innerHTML=capBar(allInLane);
+    if(lane==="next")c.appendChild(gateCard());
+    const items=features.filter(f=>f.lane===lane&&(filter==="all"||f.quadrant===filter));
+    if(!items.length){
+      const em=document.createElement("div");em.className="lane-empty";
+      em.textContent="No "+(filter!=="all"?qLabels[filter]+" ":"")+"features in this lane";
+      c.appendChild(em);
+    }
+    items.forEach(f=>c.appendChild(buildCard(f,false)));
+    const shown=items.length;
+    const tv=allInLane.reduce((s,f)=>s+f.value,0);
+    const te=allInLane.reduce((s,f)=>s+f.effort,0);
+    document.getElementById("count-"+lane).textContent=shown+" feature"+(shown!==1?"s":"");
+    document.getElementById("stats-"+lane).innerHTML=
+      '<span>Value: <strong>'+tv+' pts</strong></span><span>Effort: <strong>'+te+' pts</strong></span><span>Avg V/E: <strong>'+(te?(tv/te).toFixed(1):"\u2014")+'</strong></span>';
+  });
+  const cg=document.getElementById("cut-grid");cg.innerHTML="";
+  const ci=features.filter(f=>f.lane==="cut"&&(filter==="all"||f.quadrant===filter));
+  ci.forEach(f=>cg.appendChild(buildCard(f,true)));
+  document.getElementById("cut-section").style.display=ci.length?"block":"none";
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click",function(){
+    document.querySelectorAll(".filter-btn").forEach(b=>{b.classList.remove("active");b.setAttribute("aria-pressed","false");});
+    this.classList.add("active");this.setAttribute("aria-pressed","true");
+    render(this.dataset.filter);
+  });
+});
+
+render("all");
+</script>
+</body>
+</html>
